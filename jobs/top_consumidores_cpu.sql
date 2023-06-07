@@ -1,11 +1,15 @@
 USE [msdb]
 GO
 
-/****** Object:  Job [top_cpu_consumidores_text]    Script Date: 06/07/2023 12:26:52 ******/
+/****** Object:  Job [top_cpu_consumidores_text]    Script Date: 07/06/2023 13:05:34 ******/
+EXEC msdb.dbo.sp_delete_job @job_id=N'f1db1a7b-81b6-42b9-8424-99cc1637f14b', @delete_unused_schedule=1
+GO
+
+/****** Object:  Job [top_cpu_consumidores_text]    Script Date: 07/06/2023 13:05:34 ******/
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
 SELECT @ReturnCode = 0
-/****** Object:  JobCategory [[Uncategorized (Local)]]]    Script Date: 06/07/2023 12:26:52 ******/
+/****** Object:  JobCategory [[Uncategorized (Local)]]    Script Date: 07/06/2023 13:05:34 ******/
 IF NOT EXISTS (SELECT name FROM msdb.dbo.syscategories WHERE name=N'[Uncategorized (Local)]' AND category_class=1)
 BEGIN
 EXEC @ReturnCode = msdb.dbo.sp_add_category @class=N'JOB', @type=N'LOCAL', @name=N'[Uncategorized (Local)]'
@@ -25,7 +29,7 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'top_cpu_consumidores_text',
 		@category_name=N'[Uncategorized (Local)]', 
 		@owner_login_name=N'REDE-EMPRO\ext_luilima', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
-/****** Object:  Step [top_cpu_consumidores_text]    Script Date: 06/07/2023 12:26:52 ******/
+/****** Object:  Step [top_cpu_consumidores_text]    Script Date: 07/06/2023 13:05:34 ******/
 EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'top_cpu_consumidores_text', 
 		@step_id=1, 
 		@cmdexec_success_code=0, 
@@ -36,28 +40,27 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'top_cpu_
 		@retry_attempts=0, 
 		@retry_interval=0, 
 		@os_run_priority=0, @subsystem=N'TSQL', 
-		@command=N'insert into locksbd.dbo.top_cpu_consumidores_text
-SELECT TOP(50) GETDATE(),
-DB_NAME(t.[dbid]) AS [Database Name], 
-REPLACE(REPLACE(LEFT(t.[text], 255), CHAR(10),''''), CHAR(13),'''') AS [Short Query Text],
-qs.execution_count AS [ExecutionCount],  
-qs.total_worker_time AS [Total Worker Time], qs.min_worker_time AS [Min Worker Time],
-qs.total_worker_time/qs.execution_count AS [Avg Worker Time], 
-qs.max_worker_time AS [Max Worker Time], 
-qs.min_elapsed_time AS [Min Elapsed Time], 
-qs.total_elapsed_time/qs.execution_count AS [Avg Elapsed Time], 
-qs.max_elapsed_time AS [Max Elapsed Time],
-qs.min_logical_reads AS [Min Logical Reads],
-qs.total_logical_reads/qs.execution_count AS [Avg Logical Reads],
-qs.max_logical_reads AS [Max Logical Reads], 
-qs.creation_time AS [Creation Time],
-t.[text] AS [Query Text], 
-qp.query_plan AS [Query Plan] -- uncomment out these columns if not copying results to Excel
-FROM sys.dm_exec_query_stats AS qs WITH (NOLOCK)
-CROSS APPLY sys.dm_exec_sql_text(plan_handle) AS t 
-CROSS APPLY sys.dm_exec_query_plan(plan_handle) AS qp
-WHERE DB_NAME(t.[dbid])=''SaudeSJRP''
-', 
+		@command=N'	INSERT INTO locksbd.dbo.top_cpu_consumidores_text
+						SELECT TOP(50) GETDATE(),
+						               DB_NAME(t.[dbid]) AS [Database Name],
+						               REPLACE(REPLACE(LEFT(t.[text], 255), CHAR(10), ''''), CHAR(13), '''') AS [Short Query Text],
+						               qs.execution_count AS [ExecutionCount],
+						               qs.total_worker_time AS [Total Worker Time],
+						               qs.min_worker_time AS [Min Worker Time],
+						               qs.total_worker_time/qs.execution_count AS [Avg Worker Time],
+						               qs.max_worker_time AS [Max Worker Time],
+						               qs.min_elapsed_time AS [Min Elapsed Time],
+						               qs.total_elapsed_time/qs.execution_count AS [Avg Elapsed Time],
+						               qs.max_elapsed_time AS [Max Elapsed Time],
+						               qs.min_logical_reads AS [Min Logical Reads],
+						               qs.total_logical_reads/qs.execution_count AS [Avg Logical Reads],
+						               qs.max_logical_reads AS [Max Logical Reads],
+						               qs.creation_time AS [Creation Time],
+						               t.[text] AS [Query Text],
+						               qp.query_plan AS [Query Plan] -- uncomment out these columns if not copying results to Excel
+						FROM sys.dm_exec_query_stats AS qs WITH (NOLOCK) CROSS APPLY sys.dm_exec_sql_text(plan_handle) AS t CROSS APPLY sys.dm_exec_query_plan(plan_handle) AS qp
+						WHERE DB_NAME(t.[dbid])=''SaudeSJRP''
+				', 
 		@database_name=N'locksbd', 
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
@@ -84,5 +87,4 @@ GOTO EndSave
 QuitWithRollback:
     IF (@@TRANCOUNT > 0) ROLLBACK TRANSACTION
 EndSave:
-
 GO
