@@ -1,11 +1,11 @@
 USE [msdb]
 GO
 
-/****** Object:  Job [top_cpu_consumidores_text]    Script Date: 07/06/2023 13:05:34 ******/
+/****** Object:  Job [monit.top_cpu_consumidores_text]    Script Date: 07/06/2023 13:05:34 ******/
 EXEC msdb.dbo.sp_delete_job @job_id=N'f1db1a7b-81b6-42b9-8424-99cc1637f14b', @delete_unused_schedule=1
 GO
 
-/****** Object:  Job [top_cpu_consumidores_text]    Script Date: 07/06/2023 13:05:34 ******/
+/****** Object:  Job [monit.top_cpu_consumidores_text]    Script Date: 07/06/2023 13:05:34 ******/
 BEGIN TRANSACTION
 DECLARE @ReturnCode INT
 SELECT @ReturnCode = 0
@@ -18,7 +18,7 @@ IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 END
 
 DECLARE @jobId BINARY(16)
-EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'top_cpu_consumidores_text', 
+EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'monit.top_cpu_consumidores_text', 
 		@enabled=0, 
 		@notify_level_eventlog=0, 
 		@notify_level_email=0, 
@@ -29,8 +29,8 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'top_cpu_consumidores_text',
 		@category_name=N'[Uncategorized (Local)]', 
 		@owner_login_name=N'REDE-EMPRO\ext_luilima', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
-/****** Object:  Step [top_cpu_consumidores_text]    Script Date: 07/06/2023 13:05:34 ******/
-EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'top_cpu_consumidores_text', 
+/****** Object:  Step [monit.top_cpu_consumidores_text]    Script Date: 07/06/2023 13:05:34 ******/
+EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'monit.top_cpu_consumidores_text', 
 		@step_id=1, 
 		@cmdexec_success_code=0, 
 		@on_success_action=1, 
