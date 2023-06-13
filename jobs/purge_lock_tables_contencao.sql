@@ -21,9 +21,9 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'vs_purge_lock_tables_contenc
 		@notify_level_netsend=0, 
 		@notify_level_page=0, 
 		@delete_level=0, 
-		@description=N'Nenhuma descrição disponível.', 
+		@description=N'Nenhuma descriï¿½ï¿½o disponï¿½vel.', 
 		@category_name=N'[Uncategorized (Local)]', 
-		@owner_login_name=N'REDE-EMPRO\ext_luilima', @job_id = @jobId OUTPUT
+		@owner_login_name=N'REDE-EMPRO\amotaadm', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 /****** Object:  Step [vs_purge_lock_tables_contencao]    Script Date: 06/07/2023 12:26:37 ******/
 EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'vs_purge_lock_tables_contencao', 
@@ -37,10 +37,10 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'vs_purge
 		@retry_interval=0, 
 		@os_run_priority=0, @subsystem=N'TSQL', 
 		@command=N'DELETE    
-FROM vsadmin.dbo.vs_lock_tables_contencao
+FROM mirror.dbo.vs_lock_tables_contencao
 WHERE [collection_date] < (GETDATE() -7)
 ', 
-		@database_name=N'vsadmin', 
+		@database_name=N'mirror', 
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1

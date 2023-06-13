@@ -21,9 +21,9 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'vs_renomea_tabelas',
 		@notify_level_netsend=0, 
 		@notify_level_page=0, 
 		@delete_level=0, 
-		@description=N'Nenhuma descrição disponível.', 
+		@description=N'Nenhuma descriï¿½ï¿½o disponï¿½vel.', 
 		@category_name=N'[Uncategorized (Local)]', 
-		@owner_login_name=N'REDE-EMPRO\ext_luilima', @job_id = @jobId OUTPUT
+		@owner_login_name=N'REDE-EMPRO\amotaadm', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 /****** Object:  Step [vs_renomeia_tabelas]    Script Date: 06/07/2023 12:26:41 ******/
 EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'vs_renomeia_tabelas', 
@@ -36,14 +36,14 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'vs_renom
 		@retry_attempts=0, 
 		@retry_interval=0, 
 		@os_run_priority=0, @subsystem=N'TSQL', 
-		@command=N'------vs_conexoes_completa_text
-DECLARE @DATA VARCHAR(MAX)=(SELECT CONVERT (VARCHAR (10),create_date, 112) FROM sys.tables WHERE name=''vs_conexoes_completa_text'')
+		@command=N'------Locks.ConexoesCompletaText
+DECLARE @DATA VARCHAR(MAX)=(SELECT CONVERT (VARCHAR (10),create_date, 112) FROM sys.tables WHERE name=''Locks.ConexoesCompletaText'')
 IF ((@DATA)<(SELECT CONVERT (VARCHAR (10),GETDATE(), 112)))
 BEGIN
-SET @DATA=''vs_conexoes_completa_text_''+@DATA;
-EXEC sp_rename ''vs_conexoes_completa_text'', @DATA;
+SET @DATA=''Locks.ConexoesCompletaText_''+@DATA;
+EXEC sp_rename ''Locks.ConexoesCompletaText'', @DATA;
 
-CREATE TABLE [dbo].[vs_conexoes_completa_text](
+CREATE TABLE [dbo].[Locks.ConexoesCompletaText](
 	[dbname] [varchar](max) NULL,
 	[collectionDate] [datetime] NULL,
 	[sessionId] [int] NULL,
@@ -183,7 +183,7 @@ CREATE TABLE [dbo].[vs_lock_tables](
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 END;
 ', 
-		@database_name=N'vsadmin', 
+		@database_name=N'mirror', 
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1

@@ -21,9 +21,9 @@ EXEC @ReturnCode =  msdb.dbo.sp_add_job @job_name=N'vs_info_geral_01',
 		@notify_level_netsend=0, 
 		@notify_level_page=0, 
 		@delete_level=0, 
-		@description=N'Nenhuma descrição disponível.', 
+		@description=N'Nenhuma descriï¿½ï¿½o disponï¿½vel.', 
 		@category_name=N'[Uncategorized (Local)]', 
-		@owner_login_name=N'REDE-EMPRO\ext_luilima', @job_id = @jobId OUTPUT
+		@owner_login_name=N'REDE-EMPRO\amotaadm', @job_id = @jobId OUTPUT
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 /****** Object:  Step [vs_info_geral_01]    Script Date: 06/07/2023 12:26:22 ******/
 EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'vs_info_geral_01', 
@@ -36,7 +36,7 @@ EXEC @ReturnCode = msdb.dbo.sp_add_jobstep @job_id=@jobId, @step_name=N'vs_info_
 		@retry_attempts=0, 
 		@retry_interval=0, 
 		@os_run_priority=0, @subsystem=N'TSQL', 
-		@command=N'INSERT INTO vsadmin.dbo.vs_info_geral_01
+		@command=N'INSERT INTO mirror.dbo.vs_info_geral_01
 SELECT
 	GETDATE(),
 	COALESCE(DB_NAME(CAST(B.database_id AS VARCHAR)), ''master'') AS [database_name],	
@@ -147,11 +147,11 @@ WHERE
     A.session_id > 50
     AND A.session_id <> @@SPID
     AND command IS NOT NULL
-    AND login_name NOT IN (''REDE-EMPRO\ext_luilima'',''REDE-EMPRO\amota'')
+    AND login_name NOT IN (''REDE-EMPRO\amotaadm'',''REDE-EMPRO\amota'')
     
 
 ', 
-		@database_name=N'vsadmin', 
+		@database_name=N'mirror', 
 		@flags=0
 IF (@@ERROR <> 0 OR @ReturnCode <> 0) GOTO QuitWithRollback
 EXEC @ReturnCode = msdb.dbo.sp_update_job @job_id = @jobId, @start_step_id = 1

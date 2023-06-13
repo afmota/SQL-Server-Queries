@@ -1,15 +1,13 @@
 USE [mirror]
 GO
-
-/****** Object:  StoredProcedure [DATABASES].[spVerificaLocks]    Script Date: 13/06/2023 10:06:30 ******/
+/****** Object:  StoredProcedure [DATABASES].[spVerificaLocks]    Script Date: 6/13/2023 12:07:07 PM ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
 
 
-CREATE PROCEDURE [DATABASES].[spVerificaLocks]
+ALTER PROCEDURE [DATABASES].[spVerificaLocks]
 AS 
 BEGIN
     
@@ -19,6 +17,8 @@ BEGIN
     
     DECLARE @Monitoramento_Locks TABLE
     (
+		[collection_date] DATETIME,
+		[db_name] NVARCHAR(MAX),
         [nested_level] INT,
         [session_id] SMALLINT,
         [wait_info] NVARCHAR(4000),
@@ -41,6 +41,8 @@ BEGIN
 
     INSERT INTO @Monitoramento_Locks
     SELECT
+		GETDATE() AS collection_date,
+		DB_NAME(B.database_id) AS db_name,
         NULL AS nested_level,
         A.session_id AS session_id,
         '(' + CAST(COALESCE(E.wait_duration_ms, B.wait_time) AS VARCHAR(20)) + 'ms)' + COALESCE(E.wait_type, B.wait_type) + COALESCE((CASE 
@@ -115,7 +117,7 @@ BEGIN
 
 
     ------------------------------------------------
-    -- Gera o nível dos locks
+    -- Gera o nÃ­vel dos locks
     ------------------------------------------------
 
     UPDATE @Monitoramento_Locks
@@ -157,6 +159,3 @@ BEGIN
 
 
 END
-GO
-
-
