@@ -265,3 +265,16 @@ WHERE   wait_type NOT LIKE '%SLEEP%' -- remove eg. SLEEP_TASK and
   'PREEMPTIVE_OS_AUTHENTICATIONOPS', 'BROKER_TO_FLUSH' )
 ORDER BY wait_time_ms DESC
 -- **** Author: Jonathan Kaheyias ****
+
+
+
+
+
+-- Exemplo 3.3: Investigando as filas do agendador.
+-- ************************************************
+
+SELECT  scheduler_id ,
+        current_tasks_count ,
+		runnable_tasks_count
+FROM    sys.dm_os_schedulers
+WHERE   scheduler_id < 255
