@@ -5,3 +5,4 @@ SELECT *
 FROM mirror.DATABASES.LockTablesContencao
 WHERE collection_date > @data
 	AND db_name = 'SaudeSJRP'
+ORDER BY 1
