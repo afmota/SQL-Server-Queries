@@ -1,7 +1,7 @@
 USE mirror
 
 DECLARE @data_filtro AS DATETIME
-SET @data_filtro = '2023-06-30 07:00:00.000'
+SET @data_filtro = '2023-07-04 11:00:00.000'
 
 SELECT SPID
 	, TextData
@@ -21,7 +21,7 @@ WHERE StartTime > @data_filtro
 	--AND ApplicationName NOT LIKE 'SQLAgent%'
 	--AND HostName LIKE 'EMPRO-%'
 	--AND SPID = 587
-	AND ApplicationName LIKE 'UBSE%'
+	AND ApplicationName LIKE 'UBSF%'
 	--AND TextData LIKE '%USUARIO_SAUDE int,%'
 --ORDER BY Duration DESC
 --ORDER BY CPU DESC
