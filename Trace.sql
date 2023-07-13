@@ -1,7 +1,7 @@
 USE mirror
 
 DECLARE @data_filtro AS DATETIME
-SET @data_filtro = '2023-07-04 11:00:00.000'
+SET @data_filtro = '2023-07-12 07:00:00.000'
 
 SELECT SPID
 	, TextData
