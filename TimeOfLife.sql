@@ -103,6 +103,7 @@ WHERE
     AND A.session_id <> @@SPID
     AND (A.[status] != 'sleeping' OR (A.[status] = 'sleeping' AND B.open_transaction_count > 0))
 	--AND login_name NOT LIKE '%luilima%'
+	AND login_name NOT LIKE '%amota%'
 	AND login_name NOT LIKE 'sa'
 	--AND program_name = 'UBSF2'
 ORDER BY Duration DESC
