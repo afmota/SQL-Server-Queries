@@ -107,3 +107,4 @@ WHERE
 	AND login_name NOT LIKE 'sa'
 	--AND program_name = 'UBSF2'
 ORDER BY Duration DESC
+

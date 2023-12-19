@@ -22,10 +22,9 @@ WHERE StartTime > @data_filtro
 	--AND HostName LIKE 'EMPRO-%'
 	--AND SPID = 587
 	--AND ApplicationName LIKE 'UBSF3'
-	--AND TextData LIKE '%USUARIO_SAUDE int,%'
+	AND TextData LIKE '%AGTOT%'
 	--AND Duration > 100000000
-	AND StartTime > '2023-10-03 14:40'
---ORDER BY Duration DESC
+	--AND StartTime > '2023-10-06 11:00'
 --ORDER BY CPU DESC
 --ORDER BY Duration DESC
 --ORDER BY StartTime
